@@ -1,0 +1,4 @@
+Future improvements:
+    - work with database and update data on request
+    - modify parser to be more generic (+remove known bugs manifest possibility)
+    - write markdown with simple statistics (means, medians, variances, ...)
