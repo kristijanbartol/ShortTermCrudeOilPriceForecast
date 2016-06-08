@@ -15,7 +15,7 @@ class Visualisation:
         :param row_name:
         """
         plt.plot(data.all_data[row_name+'1'])
-        plt.show()
+        plt.savefig(const.graphs_path + row_name + '_figure')
 
     @staticmethod
     def plot_all_2d(data):
@@ -23,12 +23,17 @@ class Visualisation:
         Plots all features in 2D on one graph, time on x axis.
         :param data:
         """
-        for feature in data.feature_names:
+        for feature in data.original_feature_names:
             plt.plot(data.all_data[feature+'1'])
-        plt.show()
+        plt.savefig(const.graphs_path + 'all_data_figure')
 
     @staticmethod
     def create_feature_map(features):
+        """
+        Helper method for that prepares features names for plotting.
+        :param features:
+        :return:
+        """
         outfile = open(const.graphs_path + 'xgb.fmap', 'w')
         i = 0
         for feat in features:
@@ -39,6 +44,11 @@ class Visualisation:
 
     @staticmethod
     def feature_importance(model):
+        """
+        Plots XGBoost's feature importance derived from given trained model.
+        :param model:
+        :return:
+        """
         importance = model.get_fscore(fmap=const.graphs_path+'xgb.fmap')
         importance = sorted(importance.items(), key=operator.itemgetter(1))
 

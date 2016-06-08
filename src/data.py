@@ -6,7 +6,7 @@ import src.constants as const
 
 # Default values
 time_lag = 15
-data_size = 600
+data_size = 1200
 test_ratio = 0.8
 
 
@@ -52,6 +52,7 @@ class Data:
         """
         Takes data_size rows and splits it into train/test set.
         """
+        np.random.seed(2016)
         subset = self.all_data[:self.data_size]
         train = subset.sample(frac=self.test_ratio, random_state=200)
         test = subset.drop(train.index)
