@@ -1,4 +1,8 @@
 import matplotlib.pyplot as plt
+import pandas as pd
+import operator
+
+import src.constants as const
 
 
 class Visualisation:
@@ -22,3 +26,28 @@ class Visualisation:
         for feature in data.feature_names:
             plt.plot(data.all_data[feature+'1'])
         plt.show()
+
+    @staticmethod
+    def create_feature_map(features):
+        outfile = open(const.graphs_path + 'xgb.fmap', 'w')
+        i = 0
+        for feat in features:
+            outfile.write('{0}\t{1}\tq\n'.format(i, feat))
+            i += 1
+
+        outfile.close()
+
+    @staticmethod
+    def feature_importance(model):
+        importance = model.get_fscore(fmap=const.graphs_path+'xgb.fmap')
+        importance = sorted(importance.items(), key=operator.itemgetter(1))
+
+        df = pd.DataFrame(importance, columns=['feature', 'fscore'])
+        df['fscore'] = df['fscore'] / df['fscore'].sum()
+
+        plt.figure()
+        df.plot()
+        df.plot(kind='barh', x='feature', y='fscore', legend=False, figsize=(6, 10))
+        plt.title('XGBoost Feature Importance')
+        plt.xlabel('relative importance')
+        plt.gcf().savefig(const.graphs_path + 'feature_importance_xgb.png')

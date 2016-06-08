@@ -1,20 +1,18 @@
 
 class Params:
+    gb_params = {'objective': 'reg:linear',
+                 'eta': 0.05,
+                 'min_child_weight': 5,
+                 'subsample': 0.9,
+                 'colsample_bytree': 1,
+                 'silent': 1,
+                 'max_depth': 3
+                 }
 
-    @staticmethod
-    def get_model_params():
-        params = dict()
+    data_params = {}
 
-        params["objective"] = "reg:linear"
-        params["eta"] = 0.05
-        params["min_child_weight"] = 240
-        params["subsample"] = 0.9
-        params["colsample_bytree"] = 0.67
-        params["silent"] = 1
-        params["max_depth"] = 6
+    def get_model_params(self):
+        return self.gb_params
 
-        return list(params.items())
-
-    @staticmethod
     def get_data_params(self):
-        pass
+        return self.data_params
