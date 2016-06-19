@@ -58,6 +58,6 @@ class Visualisation:
         plt.figure()
         df.plot()
         df.plot(kind='barh', x='feature', y='fscore', legend=False, figsize=(6, 10))
-        plt.title('XGBoost Feature Importance')
-        plt.xlabel('relative importance')
+        plt.title('XGBoost - poredak važnosti značajki')
+        plt.xlabel('relativna važnost')
         plt.gcf().savefig(const.graphs_path + 'feature_importance_xgb.png')

@@ -34,31 +34,25 @@ class FillInStrategy:
         """
         return [price]
 
-    def _gate_fill(self, last_price, price):
+    def __gate_fill(self, last_price, price):
         """
         Fill weekends with last available price.
         """
         return [last_price, last_price, price]
 
-    def _linear_fill(self, last_price, price):
+    def __linear_fill(self, last_price, price):
         """
         Linear interpolation between Monday price and last available price.
         """
         diff = price - last_price
         return [last_price+diff/3, last_price+diff*2/3, price]
 
-    def _average_fill(self, last_price, price):
+    def __average_fill(self, last_price, price):
         """
         Set weekend prices to the average of Monday price and last available price.
         """
         avg = (last_price + price) / 2
         return [avg, avg, price]
-
-    def _moving_avg_fill(self, last_price, price):
-        return [price]
-
-    def _bounded_random_fill(self, last_price, price):
-        return [price]
 
 
 class Parser:
@@ -77,6 +71,8 @@ class Parser:
         :return encoded_day:
         """
         encoded_day = 0
+        for x in date.split(',')[0].split('-'):
+            print(x)
         year, month, day = [int(x) for x in date.split(',')[0].split('-')]
         for i in range(2000, year):
             encoded_day += 366 if i/4 is 0 else 365
@@ -108,8 +104,10 @@ class Parser:
         :return feature data as vector:
         """
         data = open(const.data_path+filename, 'r').read().split('\n')
-        if data[0].split(',')[0].split('-') != const.CURRENT_YEAR:
+        if int(data[0].split(',')[0].split('-')[0]) != const.CURRENT_YEAR:
             data = list(reversed(data))
 
-        self.__determine_first_weekend(data)
-        return self.strategy.fill([float(x.split(',')[1]) if 'N/A' not in x else -1 for x in data])
+        #self.__determine_first_weekend(data)
+        # Files have to be aligned to start at the same point in time
+        self.strategy.first_weekend = 1
+        return self.strategy.fill([float(x.split(',')[1]) if 'N/A' not in x and x != '' else -1 for x in data], self.fill_strategy)

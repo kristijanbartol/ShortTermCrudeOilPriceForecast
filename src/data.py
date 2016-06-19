@@ -6,7 +6,7 @@ import src.constants as const
 
 # Default values
 time_lag = 15
-data_size = 1200
+data_size = 2500
 test_ratio = 0.8
 
 
@@ -62,12 +62,12 @@ class Data:
 
     def __extract_feature_names(self):
         """
-        Generates feature names dinamically depending on number of input features (files in data/).
+        Generates feature names dinamically depending on the number of input features (files in data/).
         """
-        lagged_names_with_index = ['output']
+        lagged_names_with_index = []
         for names in self.original_feature_names:
-            for i in range(self.time_lag, 0, -1):
-                lagged_names_with_index.append(names + str(i))
+            for i in range(1, self.time_lag+1):
+                lagged_names_with_index.append(names + '_d' + str(i))
         return lagged_names_with_index
 
     def __delay_feature(self, input_feature):
@@ -76,12 +76,10 @@ class Data:
         :param input_feature:
         :return:
         """
-        # TODO - what if there is > 1 feature (output?)
-        # use original vectors -> make_data_frame()
-        data_matrix = np.zeros((self.time_lag+1, self.data_size))
-        for i in range(0, self.time_lag+1):
+        data_matrix = np.zeros((self.time_lag, self.data_size))
+        for i in range(0, self.time_lag):
             for j in range(0, self.data_size):
-                data_matrix[i][j] = input_feature[j + i]
+                data_matrix[i][j] = input_feature[j + i + 1]
         return data_matrix
 
     def make_data_frame(self, data):
@@ -95,13 +93,17 @@ class Data:
         feature_names_with_index = self.__extract_feature_names()
         data_dict = dict()
         index = 0
+
+        data_dict['output'] = np.array(self.original_vectors[self.original_feature_names.index('Nafta')][0:self.data_size])
         for feature in data:
             lagged_data = self.__delay_feature(feature)
             for row in lagged_data:
                 data_dict[feature_names_with_index[index]] = row
                 index += 1
 
-        return feature_names_with_index[1:], pd.DataFrame(data_dict)
+        dataframe = pd.DataFrame(data_dict)
+
+        return feature_names_with_index, pd.DataFrame(data_dict)
 
     def update_parameters(self, params):
         """
