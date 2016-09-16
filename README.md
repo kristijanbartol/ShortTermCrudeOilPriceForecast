@@ -22,7 +22,7 @@ The whole thing just gone pretty wrong. As the input seems quite random, the out
 
 ![Feature importance (in Croatian)](/graphs/feature_importance_xgb.png)
 
-In this particular image I'm using only crude oil and you can notice that even now the results does not make much sense. If we are lead by the image, we conclude that the most significant day is a day before the forecast, which makes sense. On the other hand, the second day is not following this rule and if we take a look at the rest of the features, they are not sorted, nor their significance shows any rule. Moreover, when run with the whole dataset, feature importance changes depending on the file position in a data/ folder, which means we predicted a bunch of NOISE.
+In this particular image I'm using only crude oil and you can notice that even now the results does not make much sense. If we are lead by the image, we conclude that the most significant day is a day before the forecast, which makes sense. On the other hand, the second day is not following this rule and if we take a look at the rest of the features, they are not sorted, nor their significance shows any rule, which means we predicted a bunch of NOISE.
 
 ## Conclusion
 
